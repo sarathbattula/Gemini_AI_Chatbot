@@ -12,6 +12,8 @@ load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 
 print("API KEY LOADED:", api_key is not None)
+if api_key:
+    print("KEY PREFIX:", api_key[:6])
 
 
 # Create Gemini client
