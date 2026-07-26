@@ -67,4 +67,8 @@ def chat():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host="0.0.0.0", port=5000)
+=======
+    app.run(debug=True)
+>>>>>>> 41a52c5bb891b018c4c88376a6e6171d541bb3ab
