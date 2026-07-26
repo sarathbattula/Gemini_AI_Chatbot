@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Assistant</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 420px;
+            height: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #4f46e5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            max-width: 80%;
+            border-radius: 15px;
+            font-size: 15px;
+        }
+
+        .user {
+            background: #4f46e5;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 3px;
+        }
+
+        .bot {
+            background: #e2e8f0;
+            color: #111827;
+            margin-right: auto;
+            border-bottom-left-radius: 3px;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            margin-left: 10px;
+            width: 50px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: #4f46e5;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        🤖 AI Assistant
+    </div>
+
+
+    <div class="chat-area" id="chat">
+        <div class="message bot">
+            Hello! 👋 <br>
+            How can I help you today?
+        </div>
+    </div>
+
+
+    <div class="input-area">
+
+        <input id="message" placeholder="Ask something...">
+
+        <button onclick="sendMessage()">
+            ➤
+        </button>
+
+    </div>
+
+</div>
+
+
+ <script>
+
+async function sendMessage(){
+
+    let input = document.getElementById("message");
+    let text = input.value.trim();
+
+    if(text === "") return;
+
+    let chat = document.getElementById("chat");
+
+
+    // Show user message
+    chat.innerHTML += `
+        <div class="message user">
+            ${text}
+        </div>
+    `;
+
+    input.value = "";
+
+
+    try {
+
+        let response = await fetch(
+            "http://127.0.0.1:5000/chat",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: text
+                })
+            }
+        );
+
+
+        let data = await response.json();
+
+
+        // Show AI response
+        chat.innerHTML += `
+            <div class="message bot">
+                ${data.reply}
+            </div>
+        `;
+
+
+    } catch(error) {
+
+        chat.innerHTML += `
+            <div class="message bot">
+                ❌ Error connecting to AI server
+            </div>
+        `;
+
+        console.log(error);
+    }
+
+
+    chat.scrollTop = chat.scrollHeight;
+
+}
+
+</script>
+
+
+</body>
+</html>
